@@ -67,6 +67,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
   
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor){
+        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+        //create plane to place in AR Scene
+        let width = CGFloat(planeAnchor.extent.x)
+        let height = CGFloat(planeAnchor.extent.z)
+        let plane = SCNPlane(width: width, height: height)
+        //attach material to plane
+        plane.materials.first?.diffuse.contents = UIImage(named: "Diamond-Icon")
+        //plane will be attached to node we created
+        let planeNode = SCNNode(geometry: plane)
+        //get position of plane node from plane anchor
+        let x = CGFloat(planeAnchor.center.x)
+        let y = CGFloat(planeAnchor.center.y)
+        let z = CGFloat(planeAnchor.center.z)
+        //set position from positions we retrieved
+        planeNode.position = SCNVector3(x, y, z)
+        //rotate??
+        planeNode.eulerAngles.x = -.pi/2
+        //add plane node to scene
+        node.addChildNode(planeNode)
         
     }
 }
